@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Audit Logs</title>
+    </head>
+    <body>
+        <h1>Audit Logs</h1>
+
+        <p>Only Administrators can view this page.</p>
+
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Timestamp</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Outcome</th>
+                <th>IP Address</th>
+            </tr>
+
+            {% for entry in audit_entries %}
+            <tr>
+                <td>{{entry["id"] }}</td>
+                <td>{{entry["timestamp"] }}</td>
+                <td>{{entry["username"] }}</td>
+                <td>{{entry["user_role"] }}</td>
+                <td>{{entry["action"] }}</td>
+                <td>{{entry["target_type"] }} {{entry["target_id"] }}</td>
+                <td>{{entry["outcome"] }}</td>
+                <td>{{entry["ip_address"] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <p><a href="/admin/dashboard>Back to Admin Dashboard</a></p>
+        <p><a hreaf="/logout">Logout</a></p>
+    </body>
+</html>

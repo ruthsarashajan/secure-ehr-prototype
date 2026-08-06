@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+Flask/ehr_system.db
+Flask/ehr_system_before_tamper.db
