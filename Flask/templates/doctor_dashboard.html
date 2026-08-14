@@ -1,21 +1,60 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Doctor Dashboard</title>
-    </head>
-    <body>
-        <h1>Welcome to Doctor Dashboard</h1>
-        <p>Welcome, {{username}}</p>
-        <p>things to be managed based on your role:</p>
+<html lang="en">
 
-        <ul>
-            <li>View Your Assigned Patients</li>
-            <li>Add Clinical Notes</li>
-            <li>Add a Feedback and Follow up Form for a Patient</li>
-            <li>Help Queries</li>
-            <li>Contact Administrator</li>
-        </ul>
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Dashboard</title>
 
-        <a href="/logout">Go Back to Login Page</a>
-    </body>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="panel">
+
+            <h1>Doctor Dashboard</h1>
+
+            <p class="introduction">
+                Welcome, {{ username }}.
+            </p>
+
+            <h2>Assigned Patients</h2>
+
+            <ul class="dashboard-list">
+
+                {% for patient in patients %}
+
+                    <li>
+                        <a href="/patient/{{ patient.id }}">
+                            {{ patient.first_name }}
+                            {{ patient.last_name }}
+                        </a>
+                    </li>
+
+                {% else %}
+
+                    <li>No patients are currently assigned.</li>
+
+                {% endfor %}
+
+            </ul>
+
+            <p>
+                <a class="page-link" href="/logout">
+                    Logout
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
 </html>

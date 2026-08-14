@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Users</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="panel">
+
+            <h1>System Users</h1>
+
+            <table class="user-table">
+
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+
+                {% for user in users %}
+
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.full_name }}</td>
+                        <td>{{ user.role }}</td>
+
+                        <td>
+                            {% if user.is_active == 1 %}
+                                Active
+                            {% else %}
+                                Inactive
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+
+            <p>
+                <a class="page-link" href="/admin/dashboard">
+                    Back to Admin Dashboard
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

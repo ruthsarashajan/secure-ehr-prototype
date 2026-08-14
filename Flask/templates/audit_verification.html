@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Audit Chain Verification</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="page-container">
+
+        <section class="panel">
+
+            <h1>Audit Chain Verification</h1>
+
+            {% if is_valid %}
+
+                <h2>Verification Passed</h2>
+
+                <p>
+                    {{ message }}
+                </p>
+
+                <p>
+                    No changes were detected in the audit-log chain.
+                </p>
+
+            {% else %}
+
+                <h2>Verification Failed</h2>
+
+                <p>
+                    {{ message }}
+                </p>
+
+                <p>
+                    One or more audit-log entries may have been changed.
+                </p>
+
+            {% endif %}
+
+            <p>
+                <a class="page-link" href="/admin/dashboard">
+                    Back to Admin Dashboard
+                </a>
+            </p>
+
+            <p>
+                <a class="page-link" href="/admin/audit-logs">
+                    View Audit Logs
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

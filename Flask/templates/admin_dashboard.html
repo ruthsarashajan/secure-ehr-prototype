@@ -1,21 +1,67 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Admin Dashboard</title>
-    </head>
-    <body>
-        <h1>Admin Dashboard</h1>
-        <p>Welcome, {{username}}.</p>
-        <p>things to be managed:</p>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
 
-        <ul>
-            <li>Manage Users</li>
-            <li>Manage Roles for Users</li>
-            <li>Manage Patient Assignments</li>
-            <li><a href="/admin/audit-logs">View Audit Logs</a></li>
-            <li><a href="/admin/verify-audit-chain">Audit Chain Verification</a></li>
-        </ul>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
 
-        <a href="/logout">Go Back to Login Page</a>
-    </body>
+<body>
+
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="dashboard-container">
+        <section class="panel">
+
+            <h1>Admin Dashboard</h1>
+
+            <p class="introduction">
+                Welcome, {{ username }}.
+            </p>
+
+            <h2>Administration</h2>
+
+            <ul class="dashboard-list">
+                <li>
+                    <a href="/admin/users">View users</a>
+                </li>
+
+                <li>
+                    <a href="/admin/patients/new">Add a new patient</a>
+                </li>
+
+                <li>
+                    <a href="/admin/staff/new">Add a new staff account</a>
+                </li>
+
+                <li>
+                    <a href="/admin/roles">View user roles</a>
+                </li>
+                <li>
+                    <a href="/admin/assignments">View patient assignments</a>
+                </li>
+
+                <li>
+                    <a href="/admin/audit-logs">View audit logs</a>
+                </li>
+
+                <li>
+                    <a href="/admin/verify-audit-chain">
+                        Verify audit chain
+                    </a>
+                </li>
+            </ul>
+
+            <div class="dashboard-footer">
+                <a class="page-link" href="/logout">Logout</a>
+            </div>
+
+        </section>
+    </main>
+
+</body>
 </html>

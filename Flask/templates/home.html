@@ -1,12 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Simulated EHR prototype</title>
+    <meta charset="UTF-8">
+    <title>Simulated EHR Security Prototype</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-    <h1>SIMULATED EHR ACCESS CONTROL PROTOTYPE</h1>
-    <p>This will be the homepage.</p>
-    <p>There will be other features like login, roles, patient records and audit logs.</p>
-    <a href="/login">Go to Login page</a>
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="page-container">
+        <section class="panel">
+            <h1>Secure EHR Access Control</h1>
+
+            <p class="introduction">
+                A cybersecurity prototype using role-based access
+                control and tamper-evident audit logging.
+            </p>
+
+            <a class="button" href="{{ url_for('login') }}">Sign in</a>
+
+            <p class="data-notice">
+                This prototype uses fictional patient data only.
+            </p>
+        </section>
+    </main>
 </body>
 </html>

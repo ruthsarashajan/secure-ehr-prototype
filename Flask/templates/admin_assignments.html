@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Patient Assignments</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="panel">
+
+            <h1>Patient Assignments</h1>
+
+            <h2>Assign a Patient to a GP</h2>
+            
+            {% if patients_without_gp and gps %}
+            
+            <form method="POST">
+                <label for="patient_id">Patient without a GP</label>
+                
+                <select id="patient_id" name="patient_id" required>
+                    <option value="">Select a patient</option>
+                    
+                    {% for patient in patients_without_gp %}
+                        <option value="{{ patient['id'] }}">
+                            {{ patient['first_name'] }} {{ patient['last_name'] }}- {{ patient['gp_registration_status'] }}
+                        </option>
+                        
+                    {% endfor %}
+                </select>
+                
+                <label for="gp_id">GP</label>
+
+                <select id="gp_id" name="gp_id" required>
+                    <option value="">Select a GP</option>
+
+                    {% for gp in gps %}
+                        <option value="{{ gp['id'] }}">
+                            {{ gp['full_name'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Assign GP</button>
+            </form>
+
+            {% elif not patients_without_gp %}
+
+            <p>All patients currently have a GP.</p>
+
+            {% else %}
+
+            <p>There are no active GP accounts available.</p>
+
+            {% endif %}
+
+            <h2>Assign a Patient to a Doctor or Nurse</h2>
+
+            {% if all_patients and clinical_staff %}
+
+            <form method="POST" action="/admin/assignments/clinician">
+
+                <label for="clinician_patient_id">Patient</label>
+
+                <select id="clinician_patient_id" name="patient_id" required>
+                    <option value="">Select a patient</option>
+
+                    {% for patient in all_patients %}
+                        <option value="{{ patient['id'] }}">
+                            {{ patient['first_name'] }} {{ patient['last_name'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <label for="clinician_id">Doctor or Nurse</label>
+
+                <select id="clinician_id" name="clinician_id" required>
+                    <option value="">Select a clinician</option>
+
+                    {% for clinician in clinical_staff %}
+                        <option value="{{ clinician['id'] }}">
+                            {{ clinician['full_name'] }} — {{ clinician['role'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Assign Clinician</button>
+
+            </form>
+
+            {% else %}
+
+            <p>There are no active doctors or nurses available.</p>
+
+            {% endif %}
+
+            <h2>Current Assignments</h2>
+            
+
+            <table class="user-table">
+
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Clinician</th>
+                    <th>Role</th>
+                    <th>Assignment Type</th>
+                </tr>
+
+                {% for assignment in assignments %}
+
+                    <tr>
+                        <td>{{ assignment.id }}</td>
+                        <td>{{ assignment.patient_name }}</td>
+                        <td>{{ assignment.clinician_name }}</td>
+                        <td>{{ assignment.clinician_role }}</td>
+                        <td>{{ assignment.assignment_type }}</td>
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+
+            <p>
+                <a class="page-link" href="/admin/dashboard">
+                    Back to Admin Dashboard
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

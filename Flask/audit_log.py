@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-DATABASE = BASE_DIR / "ehr_system.db"
+DATABASE = BASE_DIR / "database" / "ehr_system.db"
 
 def calculate_entry_hash(timestamp, user_id, username, user_role, action, target_type, target_id, outcome, ip_address, details, previous_hash):
     entry_data = {"timestamp": timestamp, "user_id": user_id, "username": username, "user_role": user_role, "action": action, "target_type": target_type, "target_id": target_id, "outcome": outcome, "ip_address": ip_address, "details": details, "previous_hash": previous_hash}

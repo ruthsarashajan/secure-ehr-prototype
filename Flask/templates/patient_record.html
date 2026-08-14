@@ -1,35 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
     <title>Patient Record</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-    <h1>Patient Record</h1>
 
-    <p><strong>Name:</strong>
-        {{ patient["first_name"] }} {{ patient["last_name"] }}
-    </p>
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
 
-    <p><strong>Date of birth:</strong>
-        {{ patient["date_of_birth"] }}
-    </p>
+    <main class="dashboard-container">
 
-    <p><strong>Allergies:</strong>
-        {{ patient["allergies"] }}
-    </p>
+        <section class="panel">
 
-    <p><strong>Medication:</strong>
-        {{ patient["medication"] }}
-    </p>
+            <h1>Patient Record</h1>
 
-    <p><strong>Diagnosis:</strong>
-        {{ patient["diagnosis"] }}
-    </p>
 
-    <p><strong>Treatment plan:</strong>
-        {{ patient["treatment_plan"] }}
-    </p>
+            <table class="user-table">
 
-    <a href="/logout">Logout</a>
+                <tr>
+                    <td><strong>Name</strong></td>
+                    <td>
+                        {{ patient["first_name"] }}
+                        {{ patient["last_name"] }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><strong>Date of Birth</strong></td>
+                    <td>{{ patient["date_of_birth"] }}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Allergies</strong></td>
+                    <td>{{ patient["allergies"] }}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Medication</strong></td>
+                    <td>{{ patient["medication"] }}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Diagnosis</strong></td>
+                    <td>{{ patient["diagnosis"] }}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Treatment Plan</strong></td>
+                    <td>{{ patient["treatment_plan"] }}</td>
+                </tr>
+
+            </table>
+
+            <p>
+                {% if session.get("role") == "PATIENT" %}
+                    <a class="page-link" href="/patient/dashboard">
+                        Back to Dashboard
+                    </a>
+
+                {% elif session.get("role") == "DOCTOR" %}
+                    <a class="page-link" href="/doctor/dashboard">
+                        Back to Dashboard
+                    </a>
+
+                {% elif session.get("role") == "NURSE" %}
+                    <a class="page-link" href="/nurse/dashboard">
+                        Back to Dashboard
+                    </a>
+
+                {% elif session.get("role") == "GP" %}
+                    <a class="page-link" href="/gp/dashboard">
+                        Back to Dashboard
+                    </a>
+
+                {% elif session.get("role") == "ADMINISTRATOR" %}
+                    <a class="page-link" href="/admin/dashboard">
+                        Back to Dashboard
+                    </a>
+                {% endif %}
+            </p>
+
+            <p>
+                <a class="page-link" href="/logout">
+                    Logout
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
 </body>
 </html>

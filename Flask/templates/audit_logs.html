@@ -1,40 +1,102 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Audit Logs</title>
-    </head>
-    <body>
-        <h1>Audit Logs</h1>
+<html lang="en">
 
-        <p>Only Administrators can view this page.</p>
+<head>
+    <meta charset="UTF-8">
+    <title>Audit Logs</title>
 
-        <table border="1">
-            <tr>
-                <th>ID</th>
-                <th>Timestamp</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Action</th>
-                <th>Target</th>
-                <th>Outcome</th>
-                <th>IP Address</th>
-            </tr>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
 
-            {% for entry in audit_entries %}
-            <tr>
-                <td>{{entry["id"] }}</td>
-                <td>{{entry["timestamp"] }}</td>
-                <td>{{entry["username"] }}</td>
-                <td>{{entry["user_role"] }}</td>
-                <td>{{entry["action"] }}</td>
-                <td>{{entry["target_type"] }} {{entry["target_id"] }}</td>
-                <td>{{entry["outcome"] }}</td>
-                <td>{{entry["ip_address"] }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+<body>
 
-        <p><a href="/admin/dashboard>Back to Admin Dashboard</a></p>
-        <p><a hreaf="/logout">Logout</a></p>
-    </body>
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="audit-container">
+
+        <section class="panel">
+
+            <h1>Audit Logs</h1>
+
+            <div class="table-container">
+
+                <table class="user-table">
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Timestamp</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                        <th>Target</th>
+                        <th>Outcome</th>
+                        <th>IP Address</th>
+                    </tr>
+
+                    {% for entry in audit_entries %}
+
+                        <tr>
+                            <td>{{ entry.id }}</td>
+
+                            <td>
+                                {{ entry.timestamp }}
+                            </td>
+
+                            <td>{{ entry.username }}</td>
+
+                            <td>{{ entry.user_role }}</td>
+
+                            <td>{{ entry.action }}</td>
+
+                            <td>
+                                {{ entry.target_type }}
+
+                                {% if entry.target_id %}
+                                    {{ entry.target_id }}
+                                {% endif %}
+                            </td>
+
+                            <td>{{ entry.outcome }}</td>
+
+                            <td>{{ entry.ip_address }}</td>
+                        </tr>
+
+                        <tr class="audit-details-row">
+                            <td colspan="8">
+                                <strong>Details:</strong>
+                                
+                                {% if entry.details %}
+                                    {{ entry.details }}
+                                {% else %}
+                                    No additional details were recorded.
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+
+            <p>
+                <a class="page-link" href="/admin/dashboard">
+                    Back to Admin Dashboard
+                </a>
+            </p>
+
+            <p>
+                <a class="page-link" href="/logout">
+                    Logout
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
 </html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View User Roles</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="panel">
+
+            <h1>User Roles</h1>
+
+            <table class="user-table">
+
+                <tr>
+                    <th>Role</th>
+                    <th>Permissions</th>
+                </tr>
+
+                <tr>
+                    <td>Patient</td>
+                    <td>View their own record and appointments.</td>
+                </tr>
+
+                <tr>
+                    <td>Doctor</td>
+                    <td>View assigned patients and add clinical notes.</td>
+                </tr>
+
+                <tr>
+                    <td>Nurse</td>
+                    <td>View assigned patients with limited permissions.</td>
+                </tr>
+
+                <tr>
+                    <td>GP</td>
+                    <td>View patients registered or assigned to them.</td>
+                </tr>
+
+                <tr>
+                    <td>Administrator</td>
+                    <td>View users, assignments and security audit logs.</td>
+                </tr>
+
+            </table>
+
+            <p>
+                <a class="page-link" href="/admin/dashboard">
+                    Back to Admin Dashboard
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

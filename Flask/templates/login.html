@@ -1,27 +1,51 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>LOGIN</title>
-    </head>
-    <body>
-        <h1>Please login here:</h1>
-        <p>Please login based on your role.</p>
-        <form method="POST" action="/login">
-            <label>Username:</label>
-            <input type="text" name="username">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Simulated EHR</title>
 
-            <br><br>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
 
-            <label>Password:</label>
-            <input type="password" name="password">
+<body>
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
 
-            <br><br>
+    <main class="page-container">
+        <section class="panel">
+            <h1>Secure Login</h1>
+            <p class="introduction">
+                Sign in using your assigned account.
+            </p>
 
-            <button type="submit">Login</button>
-        </form>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required>
+                </div>
 
-        <br>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required>
+                </div>
 
-        <a href="/">Go back to homepage</a>
-    </body>
+                <button class="login-button" type="submit">
+                    Login
+                </button>
+            </form>
+
+            <a class="page-link" href="/">Back to homepage</a>
+        </section>
+    </main>
+</body>
 </html>

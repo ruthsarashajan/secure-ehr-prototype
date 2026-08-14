@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Staff Account</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="panel">
+
+            <h1>Add a New Staff Account</h1>
+            
+            {% if error %}
+                <p>{{ error }}</p>
+            {% endif %}
+
+            {% if success %}
+                <p>{{ success }}</p>
+            {% endif %}
+
+            <form method="POST">
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Temporary Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        minlength="8"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Staff Role</label>
+
+                    <select id="role" name="role" required>
+                        <option value="">Select a role</option>
+                        <option value="DOCTOR">Doctor</option>
+                        <option value="NURSE">Nurse</option>
+                        <option value="GP">GP</option>
+                    </select>
+                </div>
+
+                <button class="button" type="submit">
+                    Create Staff Account
+                </button>
+
+            </form>
+
+            <p>
+                <a class="page-link" href="/admin/dashboard">
+                    Back to Admin Dashboard
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

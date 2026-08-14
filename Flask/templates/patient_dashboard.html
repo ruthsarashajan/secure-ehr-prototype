@@ -1,21 +1,78 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Patient Dashboard</title>
-    </head>
-    <body>
-        <h1>Welcome to Patient Dashboard.</h1>
-        <p>Hello there, {{username}}</p>
-        <p>Things you can do based on your role:</p>
+<html lang="en">
 
-        <ul>
-            <li>View Your Record</li>
-            <li>Submit a Request</li>
-            <li>Request for a GP Appointment</li>
-            <li>Help Queries</li>
-            <li>Contact Administrator</li>
-        </ul>
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Dashboard</title>
 
-        <a href="/logout">Go Back to Login Page</a>
-    </body>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <h2>Simulated EHR Security Prototype</h2>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="panel">
+
+            <h1>Patient Dashboard</h1>
+
+            <p class="introduction">
+                Welcome, {{ username }}.
+            </p>
+
+            <h2>Patient Services</h2>
+
+            <p>
+                <strong>GP Registration Status:</strong>
+                {{ patient["gp_registration_status"] }}
+            </p>
+
+            {% if patient["gp_registration_status"] == "Not_Registered" %}
+                
+                <form action="/patient/request-gp" method="POST">
+                    <button type="submit">
+                        Request GP Registration
+                    </button>
+                </form>
+            
+            {% elif patient["gp_registration_status"] == "Pending" %}
+            
+            <p>
+                Your GP registration request is waiting for administrator review
+            </p>
+            
+            {% elif patient["gp_registration_status"] == "Registered" %}
+            
+            <p>
+                You are currently registered with a GP.
+            </p>
+            
+            {% endif %}
+
+            <ul class="dashboard-list">
+
+                <li>
+                    <a href="/patient/my-record">
+                        View my patient record
+                    </a>
+                </li>
+
+            </ul>
+
+            <p>
+                <a class="page-link" href="/logout">
+                    Logout
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
 </html>
