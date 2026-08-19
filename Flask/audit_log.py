@@ -7,43 +7,100 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE = BASE_DIR / "database" / "ehr_system.db"
 
-def calculate_entry_hash(timestamp, user_id, username, user_role, action, target_type, target_id, outcome, ip_address, details, previous_hash):
-    entry_data = {"timestamp": timestamp, "user_id": user_id, "username": username, "user_role": user_role, "action": action, "target_type": target_type, "target_id": target_id, "outcome": outcome, "ip_address": ip_address, "details": details, "previous_hash": previous_hash}
 
-    entry_text = json.dumps(entry_data, sort_keys=True, separators=(",",":"))
+def calculate_entry_hash(
+    timestamp,
+    user_id,
+    username,
+    user_role,
+    action,
+    target_type,
+    target_id,
+    outcome,
+    ip_address,
+    details,
+    previous_hash,
+):
+    entry_data = {
+        "timestamp": timestamp,
+        "user_id": user_id,
+        "username": username,
+        "user_role": user_role,
+        "action": action,
+        "target_type": target_type,
+        "target_id": target_id,
+        "outcome": outcome,
+        "ip_address": ip_address,
+        "details": details,
+        "previous_hash": previous_hash,
+    }
 
-    return hashlib.sha256(
-        entry_text.encode("utf-8")
-    ).hexdigest()
+    entry_text = json.dumps(entry_data, sort_keys=True, separators=(",", ":"))
 
-def log_event(user_id, username, user_role, action, target_type, target_id, outcome, ip_address, details):
+    return hashlib.sha256(entry_text.encode("utf-8")).hexdigest()
+
+
+def log_event(
+    user_id,
+    username,
+    user_role,
+    action,
+    target_type,
+    target_id,
+    outcome,
+    ip_address,
+    details,
+):
     timestamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     connection = sqlite3.connect(DATABASE)
 
     try:
-        previous_entry = connection.execute(
-            """
+        previous_entry = connection.execute("""
             SELECT entry_hash 
             FROM audit_logs 
             ORDER BY id DESC
             LIMIT 1
-            """
-        ).fetchone()
+            """).fetchone()
 
         if previous_entry:
             previous_hash = previous_entry[0]
         else:
             previous_hash = "GENESIS"
 
-        entry_hash = calculate_entry_hash(timestamp, user_id, username, user_role, action, target_type, target_id, outcome, ip_address, details, previous_hash)
+        entry_hash = calculate_entry_hash(
+            timestamp,
+            user_id,
+            username,
+            user_role,
+            action,
+            target_type,
+            target_id,
+            outcome,
+            ip_address,
+            details,
+            previous_hash,
+        )
 
         connection.execute(
             """
             INSERT INTO audit_logs (timestamp, user_id, username, user_role, action, target_type, target_id, outcome, ip_address, details, previous_hash, entry_hash)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (timestamp, user_id, username, user_role, action, target_type, target_id, outcome, ip_address, details, previous_hash, entry_hash)
+            (
+                timestamp,
+                user_id,
+                username,
+                user_role,
+                action,
+                target_type,
+                target_id,
+                outcome,
+                ip_address,
+                details,
+                previous_hash,
+                entry_hash,
+            ),
         )
 
         connection.commit()
@@ -52,25 +109,36 @@ def log_event(user_id, username, user_role, action, target_type, target_id, outc
     finally:
         connection.close()
 
+
 def verify_audit_chain():
     connection = sqlite3.connect(DATABASE)
     connection.row_factory = sqlite3.Row
 
     try:
-        audit_entries = connection.execute(
-            """
+        audit_entries = connection.execute("""
             SELECT *
             FROM audit_logs
             ORDER BY id
-            """
-        ).fetchall()
+            """).fetchall()
         expected_previous_hash = "GENESIS"
 
         for entry in audit_entries:
             if entry["previous_hash"] != expected_previous_hash:
                 return False, f"Chain link brokenn at audit entry {entry['id']}"
 
-            recalculated_hash = calculate_entry_hash(entry["timestamp"], entry["user_id"], entry["username"], entry["user_role"], entry["action"], entry["target_type"], entry["target_id"], entry["outcome"], entry["ip_address"], entry["details"], entry["previous_hash"])
+            recalculated_hash = calculate_entry_hash(
+                entry["timestamp"],
+                entry["user_id"],
+                entry["username"],
+                entry["user_role"],
+                entry["action"],
+                entry["target_type"],
+                entry["target_id"],
+                entry["outcome"],
+                entry["ip_address"],
+                entry["details"],
+                entry["previous_hash"],
+            )
 
             if recalculated_hash != entry["entry_hash"]:
                 return False, f"Audit data changed at entry {entry['id']}"
@@ -78,6 +146,6 @@ def verify_audit_chain():
             expected_previous_hash = entry["entry_hash"]
 
         return True, "Audit chain is valid."
-    
+
     finally:
         connection.close()

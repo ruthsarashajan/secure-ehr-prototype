@@ -4,7 +4,6 @@ from pathlib import Path
 
 from audit_log import calculate_entry_hash, log_event, verify_audit_chain
 
-
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE = BASE_DIR / "database" / "ehr_system.db"
 
@@ -25,13 +24,11 @@ def repair_audit_chain():
     connection.backup(backup_connection)
     backup_connection.close()
 
-    audit_entries = connection.execute(
-        """
+    audit_entries = connection.execute("""
         SELECT *
         FROM audit_logs
         ORDER BY id
-        """
-    ).fetchall()
+        """).fetchall()
 
     expected_previous_hash = "GENESIS"
     first_invalid_index = None
@@ -49,7 +46,7 @@ def repair_audit_chain():
             entry["outcome"],
             entry["ip_address"],
             entry["details"],
-            entry["previous_hash"]
+            entry["previous_hash"],
         )
 
         if (
@@ -81,9 +78,7 @@ def repair_audit_chain():
     if first_invalid_index == 0:
         expected_previous_hash = "GENESIS"
     else:
-        expected_previous_hash = audit_entries[
-            first_invalid_index - 1
-        ]["entry_hash"]
+        expected_previous_hash = audit_entries[first_invalid_index - 1]["entry_hash"]
 
     repaired_count = 0
 
@@ -100,7 +95,7 @@ def repair_audit_chain():
             entry["outcome"],
             entry["ip_address"],
             entry["details"],
-            expected_previous_hash
+            expected_previous_hash,
         )
 
         connection.execute(
@@ -109,11 +104,7 @@ def repair_audit_chain():
             SET previous_hash = ?, entry_hash = ?
             WHERE id = ?
             """,
-            (
-                expected_previous_hash,
-                repaired_hash,
-                entry["id"]
-            )
+            (expected_previous_hash, repaired_hash, entry["id"]),
         )
 
         expected_previous_hash = repaired_hash
@@ -136,7 +127,7 @@ def repair_audit_chain():
             "Rebuilt audit hash links from entry 97 after fixing "
             "HTML form IDs being hashed as text before SQLite "
             "stored them as integers. Event data was unchanged."
-        )
+        ),
     )
 
     is_valid, message = verify_audit_chain()

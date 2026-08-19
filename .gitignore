@@ -6,3 +6,6 @@ venv/
 Flask/ehr_system.db
 Flask/ehr_system_before_tamper.db
 Flask/database/*.db
+/Archive/
+/docs/project-journal.md
+/Meeting logs/

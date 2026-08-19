@@ -12,18 +12,46 @@ seed_users = [
     ("nurse", "nurse123", "NURSE", "Nurse Vanessa Miller"),
     ("gp", "gp123", "GP", "Dr. Nathan Wolff"),
     ("patient1", "patient123", "PATIENT", "Leyon Potts"),
-    ("patient2", "patient2123", "PATIENT", "Isla Olaf")
+    ("patient2", "patient2123", "PATIENT", "Isla Olaf"),
 ]
 
 seed_patients = [
-    ("patient1", "Leyon", "Potts", "1988-04-15", "Male", "10 Mayfair Avenue, Glasgow", "0770090001", "Maya Potts - 0770894573", "Penicillin", "Salbutamol inhaler", "Asthma", "Use inhaler as prescribed and attend an annual review", "Registered"),
-    ("patient2", "Isla", "Olaf", "2002-09-22", "Female", "25 Garden Road, Oxford", "0986783462", "Noah Kelp - 077238974", "None Known", "None", "Migraine", "Record migraine triggers and review if symptoms worsen", "Not_Registered")
+    (
+        "patient1",
+        "Leyon",
+        "Potts",
+        "1988-04-15",
+        "Male",
+        "10 Mayfair Avenue, Glasgow",
+        "0770090001",
+        "Maya Potts - 0770894573",
+        "Penicillin",
+        "Salbutamol inhaler",
+        "Asthma",
+        "Use inhaler as prescribed and attend an annual review",
+        "Registered",
+    ),
+    (
+        "patient2",
+        "Isla",
+        "Olaf",
+        "2002-09-22",
+        "Female",
+        "25 Garden Road, Oxford",
+        "0986783462",
+        "Noah Kelp - 077238974",
+        "None Known",
+        "None",
+        "Migraine",
+        "Record migraine triggers and review if symptoms worsen",
+        "Not_Registered",
+    ),
 ]
 
 seed_assignments = [
     ("patient1", "doctor", "doctor", "admin"),
     ("patient1", "nurse", "nurse", "admin"),
-    ("patient1", "gp", "gp", "admin")
+    ("patient1", "gp", "gp", "admin"),
 ]
 
 connection = sqlite3.connect(DATABASE)
@@ -51,7 +79,12 @@ for patient in seed_patients:
         patient,
     )
 
-for patient_username, clinician_username, assignment_type, created_by_username in seed_assignments:
+for (
+    patient_username,
+    clinician_username,
+    assignment_type,
+    created_by_username,
+) in seed_assignments:
     connection.execute(
         """
         INSERT INTO patient_assignments (patient_id, clinician_id, assignment_type, created_by)
@@ -80,13 +113,11 @@ patients = connection.execute(
     "SELECT patients.id, users.username, patients.first_name, patients.last_name, patients.gp_registration_status FROM patients JOIN users ON patients.user_id = users.id ORDER BY patients.id"
 ).fetchall()
 
-assignments = connection.execute(
-    """
+assignments = connection.execute("""
     SELECT patients.first_name, patients.last_name, users.full_name, patient_assignments.assignment_type FROM patient_assignments JOIN patients
     ON patient_assignments.patient_id = patients.id JOIN users 
     ON patient_assignments.clinician_id = users.id ORDER BY patient_assignments.id
-    """
-).fetchall()
+    """).fetchall()
 
 connection.close()
 

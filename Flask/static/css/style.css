@@ -1,193 +1,193 @@
 /* Basic page settings */
 body {
-    margin: 0;
-    font-family: Lucida Sans, Verdana, sans-serif, sans-serif;
-    background-color: #9abbdb;
-    color: #1f2d3d;
+  margin: 0;
+  font-family:
+    Lucida Sans,
+    Verdana,
+    sans-serif,
+    sans-serif;
+  background-color: #9abbdb;
+  color: #1f2d3d;
 }
 
 /* Header used on the homepage and login page */
 .site-header {
-    background-color: #243f63;
-    color: white;
-    padding: 20px 35px;
-    border-bottom: 5px solid #6fa4a7;
+  background-color: #243f63;
+  color: white;
+  padding: 20px 35px;
+  border-bottom: 5px solid #6fa4a7;
 }
 
 .site-header h2 {
-    margin: 0;
+  margin: 0;
 }
 
 /* Centres the main content */
 .page-container {
-    width: 90%;
-    max-width: 700px;
-    min-height: calc(100vh - 90px);
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 90%;
+  max-width: 700px;
+  min-height: calc(100vh - 90px);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* White content box */
 .panel {
-    width: 100%;
-    padding: 35px;
-    background-color: white;
-    border: 1px solid #cccccc;
-    border-radius: 6px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 35px;
+  background-color: white;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  box-sizing: border-box;
 }
 
 .panel h1 {
-    margin-top: 0;
-    color: #243f63;
+  margin-top: 0;
+  color: #243f63;
 }
 
 .introduction {
-    font-size: 18px;
-    line-height: 1.4;
+  font-size: 18px;
+  line-height: 1.4;
 }
 
 /* Login form */
 .form-group {
-    margin-bottom: 18px;
+  margin-bottom: 18px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 7px;
-    font-weight: bold;
+  display: block;
+  margin-bottom: 7px;
+  font-weight: bold;
 }
 
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #aebdca;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #aebdca;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 /* Main button */
 .button {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    margin: 20px 0;
-    background-color: #4d898d;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
-    text-align: center;
-    text-decoration: none;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 20px 0;
+  background-color: #4d898d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .button:hover {
-    background-color: #3d7377;
+  background-color: #3d7377;
 }
 
 /* Normal page links */
 .page-link {
-    color: #1769aa;
-    font-weight: bold;
+  color: #1769aa;
+  font-weight: bold;
 }
 
 /* Fictional-data message on homepage */
 .data-notice {
-    margin-top: 25px;
-    text-align: center;
-    color: #555555;
+  margin-top: 25px;
+  text-align: center;
+  color: #555555;
 }
 
 /* Dashboard pages */
 .dashboard-container {
-    width: 90%;
-    max-width: 800px;
-    margin: 40px auto;
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
 }
 
 .dashboard-list {
-    padding-left: 20px;
-    line-height: 2;
+  padding-left: 20px;
+  line-height: 2;
 }
 
 .dashboard-list a {
-    color: #1769aa;
-    font-weight: bold;
+  color: #1769aa;
+  font-weight: bold;
 }
-
 
 /* Simple dashboard menu */
 .dashboard-list {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 20px;
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
 }
 
 .dashboard-list li {
-    padding: 15px 5px;
-    border-bottom: 1px solid #cbd5df;
+  padding: 15px 5px;
+  border-bottom: 1px solid #cbd5df;
 }
 
 .dashboard-list li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .dashboard-list a {
-    color: #1769aa;
-    font-weight: bold;
-    text-decoration: none;
+  color: #1769aa;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 .dashboard-list a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
-
 
 /* Users table */
 .user-table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
 }
 
 .user-table th {
-    padding: 10px;
-    background-color: #243f63;
-    color: white;
-    text-align: left;
-    border: 1px solid #cccccc;
+  padding: 10px;
+  background-color: #243f63;
+  color: white;
+  text-align: left;
+  border: 1px solid #cccccc;
 }
 
 .user-table td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #cccccc;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #cccccc;
 }
-
-
 
 /* Wider container for the audit-log page */
 .audit-container {
-    width: 95%;
-    max-width: 1500px;
-    margin: 40px auto;
+  width: 95%;
+  max-width: 1500px;
+  margin: 40px auto;
 }
 
 /* Keeps the audit table inside the white panel */
 .table-container {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
-
 .audit-details-row td {
-    background-color: #f1f5f9;
-    padding: 10px 14px;
-    font-size: 16px;
+  background-color: #f1f5f9;
+  padding: 10px 14px;
+  font-size: 16px;
 }

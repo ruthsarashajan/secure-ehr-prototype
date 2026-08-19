@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask import Flask, render_template, request, session, redirect
 from audit_log import log_event, verify_audit_chain
 
-#To create website
+# To create website
 app = Flask(__name__)
 
 app.secret_key = "temporary-secret-key"
@@ -12,17 +12,20 @@ app.secret_key = "temporary-secret-key"
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE = BASE_DIR / "database" / "ehr_system.db"
 
+
 def get_db_connection():
     connection = sqlite3.connect(DATABASE)
     connection.row_factory = sqlite3.Row
     return connection
 
-#basically says when someone opens this homepage, run this function below
+
+# basically says when someone opens this homepage, run this function below
 @app.route("/")
-#creates homepage function
+# creates homepage function
 def home():
 
     return render_template("home.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -59,9 +62,9 @@ def login():
                 target_id=None,
                 outcome="success",
                 ip_address=request.remote_addr,
-                details="User is logged in successfully!"
+                details="User is logged in successfully!",
             )
-            
+
             if role == "ADMINISTRATOR":
                 return redirect("/admin/dashboard")
             elif role == "DOCTOR":
@@ -73,7 +76,7 @@ def login():
             elif role == "PATIENT":
                 return redirect("/patient/dashboard")
             else:
-                return "Role is not defined"  
+                return "Role is not defined"
         else:
             log_event(
                 user_id=user["id"] if user else None,
@@ -84,12 +87,13 @@ def login():
                 target_id=None,
                 outcome="failed",
                 ip_address=request.remote_addr,
-                details="Invalid username or password!"
+                details="Invalid username or password!",
             )
 
             return "Invalid login details. Please try again!"
 
     return render_template("login.html")
+
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
@@ -99,10 +103,7 @@ def admin_dashboard():
     if session.get("role") != "ADMINISTRATOR":
         return "Access Denied: Administrators Only!", 403
 
-    return render_template(
-        "admin_dashboard.html",
-        username=session["username"]
-    )
+    return render_template("admin_dashboard.html", username=session["username"])
 
 
 @app.route("/admin/users")
@@ -115,17 +116,16 @@ def admin_users():
 
     connection = get_db_connection()
 
-    users = connection.execute(
-        """
+    users = connection.execute("""
         SELECT id, username, full_name, role, is_active
         FROM users
         ORDER BY id
-        """
-    ).fetchall()
+        """).fetchall()
 
     connection.close()
 
     return render_template("admin_users.html", users=users)
+
 
 @app.route("/admin/staff/new", methods=["GET", "POST"])
 def admin_create_staff():
@@ -150,22 +150,20 @@ def admin_create_staff():
     # Check that all fields were completed
     if not username or not password or not full_name or not role:
         return render_template(
-            "admin_create_staff.html",
-            error="Please complete every field."
+            "admin_create_staff.html", error="Please complete every field."
         )
 
     # Check the temporary password
     if len(password) < 8:
         return render_template(
             "admin_create_staff.html",
-            error="The temporary password must contain at least 8 characters."
+            error="The temporary password must contain at least 8 characters.",
         )
 
     # Prevent someone from submitting an administrator role manually
     if role not in allowed_roles:
         return render_template(
-            "admin_create_staff.html",
-            error="Please select a valid staff role."
+            "admin_create_staff.html", error="Please select a valid staff role."
         )
 
     connection = get_db_connection()
@@ -177,15 +175,14 @@ def admin_create_staff():
         FROM users
         WHERE username = ?
         """,
-        (username,)
+        (username,),
     ).fetchone()
 
     if existing_user:
         connection.close()
 
         return render_template(
-            "admin_create_staff.html",
-            error="That username is already in use."
+            "admin_create_staff.html", error="That username is already in use."
         )
 
     # Hash the temporary password
@@ -202,12 +199,7 @@ def admin_create_staff():
         )
         VALUES (?, ?, ?, ?)
         """,
-        (
-            username,
-            password_hash,
-            role,
-            full_name
-        )
+        (username, password_hash, role, full_name),
     )
 
     staff_id = staff_cursor.lastrowid
@@ -233,17 +225,14 @@ def admin_create_staff():
             + " with username "
             + username
             + "."
-        )
+        ),
     )
 
     return render_template(
         "admin_create_staff.html",
-        success=(
-            "Staff account created successfully for "
-            + full_name
-            + "."
-        )
+        success=("Staff account created successfully for " + full_name + "."),
     )
+
 
 @app.route("/admin/patients/new", methods=["GET", "POST"])
 def admin_create_patient():
@@ -264,9 +253,7 @@ def admin_create_patient():
         password = request.form.get("password", "")
         first_name = request.form.get("first_name", "").strip()
         last_name = request.form.get("last_name", "").strip()
-        date_of_birth = request.form.get(
-            "date_of_birth", ""
-        ).strip()
+        date_of_birth = request.form.get("date_of_birth", "").strip()
 
         # Check that every field has been completed
         if (
@@ -280,10 +267,7 @@ def admin_create_patient():
 
         # Require a reasonable temporary password
         elif len(password) < 8:
-            error = (
-                "The temporary password must contain "
-                "at least 8 characters."
-            )
+            error = "The temporary password must contain " "at least 8 characters."
 
         else:
             connection = get_db_connection()
@@ -295,7 +279,7 @@ def admin_create_patient():
                 FROM users
                 WHERE username = ?
                 """,
-                (username,)
+                (username,),
             ).fetchone()
 
             if existing_user:
@@ -318,12 +302,7 @@ def admin_create_patient():
                     )
                     VALUES (?, ?, ?, ?)
                     """,
-                    (
-                        username,
-                        password_hash,
-                        "PATIENT",
-                        full_name
-                    )
+                    (username, password_hash, "PATIENT", full_name),
                 )
 
                 # Get the ID of the new user
@@ -340,12 +319,7 @@ def admin_create_patient():
                     )
                     VALUES (?, ?, ?, ?)
                     """,
-                    (
-                        user_id,
-                        first_name,
-                        last_name,
-                        date_of_birth
-                    )
+                    (user_id, first_name, last_name, date_of_birth),
                 )
 
                 # Get the ID of the new patient record
@@ -370,20 +344,13 @@ def admin_create_patient():
                         + " with username "
                         + username
                         + "."
-                    )
+                    ),
                 )
 
-                success = (
-                    "Patient account created successfully for "
-                    + full_name
-                    + "."
-                )
+                success = "Patient account created successfully for " + full_name + "."
 
-    return render_template(
-        "admin_create_patient.html",
-        error=error,
-        success=success
-    )
+    return render_template("admin_create_patient.html", error=error, success=success)
+
 
 @app.route("/admin/roles")
 def admin_roles():
@@ -394,6 +361,7 @@ def admin_roles():
         return "Access Denied: Administrators Only!", 403
 
     return render_template("admin_roles.html")
+
 
 @app.route("/admin/assignments", methods=["GET", "POST"])
 def admin_assignments():
@@ -421,7 +389,7 @@ def admin_assignments():
             FROM patients
             WHERE id = ?
             """,
-            (patient_id,)
+            (patient_id,),
         ).fetchone()
 
         # Check that the selected user is an active GP
@@ -433,7 +401,7 @@ def admin_assignments():
             AND role = 'GP'
             AND is_active = 1
             """,
-            (gp_id,)
+            (gp_id,),
         ).fetchone()
 
         # Check whether this patient already has a GP
@@ -444,7 +412,7 @@ def admin_assignments():
             WHERE patient_id = ?
             AND assignment_type = 'gp'
             """,
-            (patient_id,)
+            (patient_id,),
         ).fetchone()
 
         if patient is None or gp is None:
@@ -466,12 +434,7 @@ def admin_assignments():
             )
             VALUES (?, ?, ?, ?)
             """,
-            (
-                patient_id,
-                gp_id,
-                "gp",
-                session.get("user_id")
-            )
+            (patient_id, gp_id, "gp", session.get("user_id")),
         )
 
         # Update the patient's GP registration status
@@ -482,15 +445,13 @@ def admin_assignments():
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
             """,
-            (patient_id,)
+            (patient_id,),
         )
 
         connection.commit()
         connection.close()
 
-        patient_name = (
-            patient["first_name"] + " " + patient["last_name"]
-        )
+        patient_name = patient["first_name"] + " " + patient["last_name"]
 
         # Record the assignment in the audit log
         log_event(
@@ -508,12 +469,11 @@ def admin_assignments():
                 + " to GP "
                 + gp["full_name"]
                 + "."
-            )
+            ),
         )
 
         return redirect("/admin/assignments")
-    assignments = connection.execute(
-        """
+    assignments = connection.execute("""
         SELECT
             patient_assignments.id,
             patients.first_name || ' ' || patients.last_name
@@ -527,11 +487,9 @@ def admin_assignments():
         JOIN users
             ON patient_assignments.clinician_id = users.id
         ORDER BY patient_assignments.id
-        """
-    ).fetchall()
+        """).fetchall()
 
-    patients_without_gp = connection.execute(
-        """
+    patients_without_gp = connection.execute("""
         SELECT patients.id, patients.first_name, patients.last_name, patients.gp_registration_status
         FROM patients
         WHERE NOT EXISTS (
@@ -541,36 +499,29 @@ def admin_assignments():
             AND patient_assignments.assignment_type = 'gp'
         )
         ORDER BY patients.first_name, patients.last_name
-        """
-    ).fetchall()
+        """).fetchall()
 
-    gps = connection.execute(
-        """
+    gps = connection.execute("""
         SELECT id, full_name
         FROM users
         WHERE role = 'GP'
         AND is_active = 1
         ORDER BY full_name
-        """
-    ).fetchall()
+        """).fetchall()
 
-    all_patients = connection.execute(
-        """
+    all_patients = connection.execute("""
         SELECT id, first_name, last_name
         FROM patients
         ORDER BY first_name, last_name
-        """
-    ).fetchall()
+        """).fetchall()
 
-    clinical_staff = connection.execute(
-        """
+    clinical_staff = connection.execute("""
         SELECT id, full_name, role
         FROM users
         WHERE role IN ('DOCTOR', 'NURSE')
         AND is_active = 1
         ORDER BY role, full_name
-        """
-    ).fetchall()
+        """).fetchall()
 
     connection.close()
 
@@ -580,8 +531,9 @@ def admin_assignments():
         patients_without_gp=patients_without_gp,
         gps=gps,
         all_patients=all_patients,
-        clinical_staff=clinical_staff
+        clinical_staff=clinical_staff,
     )
+
 
 @app.route("/admin/assignments/clinician", methods=["POST"])
 def assign_clinician():
@@ -605,7 +557,7 @@ def assign_clinician():
         FROM patients
         WHERE id = ?
         """,
-        (patient_id,)
+        (patient_id,),
     ).fetchone()
 
     clinician = connection.execute(
@@ -616,7 +568,7 @@ def assign_clinician():
         AND role IN ('DOCTOR', 'NURSE')
         AND is_active = 1
         """,
-        (clinician_id,)
+        (clinician_id,),
     ).fetchone()
 
     if patient is None or clinician is None:
@@ -633,7 +585,7 @@ def assign_clinician():
         AND clinician_id = ?
         AND assignment_type = ?
         """,
-        (patient_id, clinician_id, assignment_type)
+        (patient_id, clinician_id, assignment_type),
     ).fetchone()
 
     if existing_assignment:
@@ -650,12 +602,7 @@ def assign_clinician():
         )
         VALUES (?, ?, ?, ?)
         """,
-        (
-            patient_id,
-            clinician_id,
-            assignment_type,
-            session.get("user_id")
-        )
+        (patient_id, clinician_id, assignment_type, session.get("user_id")),
     )
 
     connection.commit()
@@ -680,10 +627,11 @@ def assign_clinician():
             + " "
             + clinician["full_name"]
             + "."
-        )
+        ),
     )
 
     return redirect("/admin/assignments")
+
 
 @app.route("/admin/audit-logs")
 def admin_audit_logs():
@@ -695,17 +643,16 @@ def admin_audit_logs():
 
     connection = get_db_connection()
 
-    audit_entries = connection.execute(
-        """
+    audit_entries = connection.execute("""
         SELECT id, timestamp, username, user_role, action, target_type, target_id, outcome, ip_address, details 
         FROM audit_logs 
         ORDER BY id DESC
-        """
-    ).fetchall()
+        """).fetchall()
 
     connection.close()
 
     return render_template("audit_logs.html", audit_entries=audit_entries)
+
 
 @app.route("/admin/verify-audit-chain")
 def admin_verify_audit_chain():
@@ -717,7 +664,10 @@ def admin_verify_audit_chain():
 
     is_valid, message = verify_audit_chain()
 
-    return render_template("audit_verification.html", is_valid=is_valid, message=message)
+    return render_template(
+        "audit_verification.html", is_valid=is_valid, message=message
+    )
+
 
 @app.route("/doctor/dashboard")
 def doctor_dashboard():
@@ -742,16 +692,15 @@ def doctor_dashboard():
           AND patient_assignments.assignment_type = 'doctor'
         ORDER BY patients.first_name
         """,
-        (session["user_id"],)
+        (session["user_id"],),
     ).fetchall()
 
     connection.close()
 
     return render_template(
-        "doctor_dashboard.html",
-        username=session["username"],
-        patients=patients
+        "doctor_dashboard.html", username=session["username"], patients=patients
     )
+
 
 @app.route("/nurse/dashboard")
 def nurse_dashboard():
@@ -776,16 +725,15 @@ def nurse_dashboard():
           AND patient_assignments.assignment_type = 'nurse'
         ORDER BY patients.first_name
         """,
-        (session["user_id"],)
+        (session["user_id"],),
     ).fetchall()
 
     connection.close()
 
     return render_template(
-        "nurse_dashboard.html",
-        username=session["username"],
-        patients=patients
+        "nurse_dashboard.html", username=session["username"], patients=patients
     )
+
 
 @app.route("/gp/dashboard")
 def gp_dashboard():
@@ -810,16 +758,15 @@ def gp_dashboard():
           AND patient_assignments.assignment_type = 'gp'
         ORDER BY patients.first_name
         """,
-        (session["user_id"],)
+        (session["user_id"],),
     ).fetchall()
 
     connection.close()
 
     return render_template(
-        "gp_dashboard.html",
-        username=session["username"],
-        patients=patients
+        "gp_dashboard.html", username=session["username"], patients=patients
     )
+
 
 @app.route("/patient/dashboard")
 def patient_dashboard():
@@ -837,7 +784,7 @@ def patient_dashboard():
         FROM patients
         WHERE user_id = ?
         """,
-        (session["user_id"],)
+        (session["user_id"],),
     ).fetchone()
 
     connection.close()
@@ -846,10 +793,9 @@ def patient_dashboard():
         return "Patient record not found.", 404
 
     return render_template(
-        "patient_dashboard.html",
-        username=session["username"],
-        patient=patient
+        "patient_dashboard.html", username=session["username"], patient=patient
     )
+
 
 @app.route("/patient/request-gp", methods=["POST"])
 def request_gp_registration():
@@ -867,7 +813,7 @@ def request_gp_registration():
         FROM patients
         WHERE user_id = ?
         """,
-        (session["user_id"],)
+        (session["user_id"],),
     ).fetchone()
 
     if patient is None:
@@ -881,7 +827,7 @@ def request_gp_registration():
         WHERE patient_id = ?
         AND assignment_type = 'gp'
         """,
-        (patient["id"],)
+        (patient["id"],),
     ).fetchone()
 
     if existing_gp:
@@ -899,7 +845,7 @@ def request_gp_registration():
             updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
         """,
-        (patient["id"],)
+        (patient["id"],),
     )
 
     connection.commit()
@@ -914,10 +860,11 @@ def request_gp_registration():
         target_id=patient["id"],
         outcome="success",
         ip_address=request.remote_addr,
-        details="Patient requested registration with a GP."
+        details="Patient requested registration with a GP.",
     )
 
     return redirect("/patient/dashboard")
+
 
 @app.route("/patient/my-record")
 def patient_my_record():
@@ -935,7 +882,7 @@ def patient_my_record():
         FROM patients
         WHERE user_id = ?
         """,
-        (session["user_id"],)
+        (session["user_id"],),
     ).fetchone()
 
     connection.close()
@@ -944,6 +891,7 @@ def patient_my_record():
         return "Patient record not found.", 404
 
     return redirect(f"/patient/{patient['id']}")
+
 
 @app.route("/patient/<int:patient_id>")
 def view_patient_record(patient_id):
@@ -978,11 +926,7 @@ def view_patient_record(patient_id):
         access_allowed = username == patient["patient_username"]
 
     elif role in ["DOCTOR", "NURSE", "GP"]:
-        assignment_types = {
-            "DOCTOR": "doctor",
-            "NURSE": "nurse",
-            "GP": "gp"
-        }
+        assignment_types = {"DOCTOR": "doctor", "NURSE": "nurse", "GP": "gp"}
 
         assignment = connection.execute(
             """
@@ -1011,7 +955,7 @@ def view_patient_record(patient_id):
             target_id=patient_id,
             outcome="denied",
             ip_address=request.remote_addr,
-            details="User attempted to view an unauthorised patient record."
+            details="User attempted to view an unauthorised patient record.",
         )
 
         return "Access denied: You cannot view this patient record.", 403
@@ -1025,16 +969,18 @@ def view_patient_record(patient_id):
         target_id=patient_id,
         outcome="success",
         ip_address=request.remote_addr,
-        details="User viewed an authorised patient record."
+        details="User viewed an authorised patient record.",
     )
 
     return render_template("patient_record.html", patient=patient)
 
-'''
+
+"""
 @app.route("/debug/users")
 def debug_users():
     return str(users)
-'''
+"""
+
 
 @app.route("/logout")
 def logout():
@@ -1048,11 +994,12 @@ def logout():
             target_id=None,
             outcome="success",
             ip_address=request.remote_addr,
-            details="User logged out."
+            details="User logged out.",
         )
 
     session.clear()
     return redirect("/login")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
