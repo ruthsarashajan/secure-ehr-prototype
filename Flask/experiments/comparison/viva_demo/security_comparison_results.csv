@@ -1,0 +1,2 @@
+timestamp,number_of_tests,sha256_average_ms,sha256_digest_bytes,ml_dsa_keygen_average_ms,ml_dsa_signing_average_ms,ml_dsa_verification_average_ms,ml_dsa_public_key_bytes,ml_dsa_secret_key_bytes,ml_dsa_signature_bytes,sha256_detected_change,ml_dsa_detected_change
+2026-08-21T03:44:53,30,0.0022732136654667555,32,19.85665666870773,117.12461332790554,23.35728332788373,1312,2560,2420,True,True
